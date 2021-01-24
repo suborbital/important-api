@@ -1,0 +1,13 @@
+# the Directive is a complete description of your application, including all of its business logic.
+
+# replace 'suborbital' with your organization name, and ensure the version is updated for each deploy!
+identifier: com.suborbital.important-api
+appVersion: v0.0.1
+atmoVersion: v0.0.6
+
+handlers:
+  - type: request
+    resource: /stars/*repo
+    method: GET
+    steps:
+      - fn: ghstars
