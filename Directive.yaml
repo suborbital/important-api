@@ -3,7 +3,7 @@
 # replace 'suborbital' with your organization name, and ensure the version is updated for each deploy!
 identifier: com.suborbital.important-api
 appVersion: v0.0.1
-atmoVersion: v0.0.6
+atmoVersion: v0.1.0
 
 handlers:
   - type: request
@@ -11,3 +11,10 @@ handlers:
     method: GET
     steps:
       - fn: ghstars
+  - type: request
+    resource: /repo/report/*repo
+    method: POST
+    steps:
+      - fn: ghstars
+        as: stargazers
+      - fn: send-report
