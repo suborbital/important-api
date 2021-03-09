@@ -16,7 +16,12 @@ struct Repo {
 impl runnable::Runnable for Ghstars {
     fn run(&self, _: Vec<u8>) -> Option<Vec<u8>> {
         let repo_param = req::url_param("repo");
-        let repo = repo_param.trim_start_matches("/");
+        let mut repo = String::from(repo_param.trim_start_matches("/"));
+
+        let method = req::method();
+        if method == "SCHED" {
+            repo = req::state("repo");
+        }
 
         log::info(format!("fetching stars for {}", repo).as_str());
     
@@ -27,7 +32,7 @@ impl runnable::Runnable for Ghstars {
             Err(_) => return None,
         };
 
-        Some(util::to_vec(format!("stargazers: {}", repo.stargazers_count)))
+        Some(util::to_vec(format!("{}", repo.stargazers_count)))
     }
 }
 

@@ -5,25 +5,31 @@ use suborbital::util;
 use suborbital::log;
 use suborbital::file;
 use std::collections::BTreeMap;
-use serde::{Serialize, Deserialize};
+use serde::{Serialize};
 
 struct SendReport{}
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 struct WebhookContents {
     content: String
 }
 
 impl runnable::Runnable for SendReport {
     fn run(&self, _: Vec<u8>) -> Option<Vec<u8>> {
-        let repo = req::url_param("repo");
+        let mut repo = req::url_param("repo");
+
+        let method = req::method();
+        if method == "SCHED" {
+            repo = req::state("repo");
+        }
+
         let url = file::get_static("./webhook").unwrap_or_default();
         let url_str = util::to_string(url);
 
         let stargazers = req::state("stargazers");
 
         let content = WebhookContents{
-            content: format!("github.com{} {}", repo, stargazers)
+            content: format!("{}: {} stargazers", repo, stargazers)
         };
 
         let mut headers = BTreeMap::new();

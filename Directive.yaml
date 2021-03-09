@@ -11,10 +11,52 @@ handlers:
     method: GET
     steps:
       - fn: ghstars
+
+
   - type: request
     resource: /repo/report/*repo
     method: POST
     steps:
       - fn: ghstars
         as: stargazers
+        onErr:
+          any: return
+
+      - fn: send-report
+
+
+schedules:
+  - name: atmo-report
+    every:
+      hours: 1
+    state:
+      repo: suborbital/atmo
+    steps:
+      - fn: ghstars
+        onErr:
+          code:
+            404: continue
+            401: continue
+          other: return
+
+      - fn: send-report
+        with:
+          - "stargazers: ghstars"
+        onErr:
+          code:
+            401: continue
+          other: return
+
+
+  - name: reactr-report
+    every:
+      hours: 1
+    state:
+      repo: suborbital/reactr
+    steps:
+      - fn: ghstars
+        as: stargazers
+        onErr:
+          any: return
+
       - fn: send-report
