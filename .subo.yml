@@ -1,8 +1,6 @@
 dotVersionFiles:
   - release/version.go
-
 preMakeTargets:
   - test
-
 postMakeTargets:
   - test2
