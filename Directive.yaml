@@ -2,7 +2,7 @@
 
 # replace 'suborbital' with your organization name, and ensure the version is updated for each deploy!
 identifier: com.suborbital.important-api
-appVersion: v0.1.3
+appVersion: v0.1.4
 atmoVersion: v0.1.0
 
 handlers:
