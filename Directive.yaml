@@ -11,7 +11,11 @@ handlers:
     method: GET
     steps:
       - fn: ghstars
-
+        onErr:
+          code:
+            403: return
+            404: return
+          other: continue
 
   - type: request
     resource: /repo/report/*repo
@@ -34,18 +38,11 @@ schedules:
     steps:
       - fn: ghstars
         onErr:
-          code:
-            404: continue
-            401: continue
-          other: return
+          any: return
 
       - fn: send-report
         with:
           - "stargazers: ghstars"
-        onErr:
-          code:
-            401: continue
-          other: return
 
 
   - name: reactr-report
