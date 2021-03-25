@@ -11,10 +11,12 @@ handlers:
     method: GET
     steps:
       - fn: ghstars
+
   - type: request
     resource: /repo/report/*repo
     method: POST
     steps:
       - fn: ghstars
         as: stargazers
+        
       - fn: send-report
