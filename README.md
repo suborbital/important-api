@@ -2,12 +2,12 @@
 
 This important API is a demo application that shows a fully-functional [Atmo](https://github.com/suborbital/atmo) app. It showcases the Runnable API, and the ease of creating a WebAssembly server application using declarative development.
 
-To run, you'll need to install [subo](https://github.com/suborbital/subo), the Suborbital CLI.
+To run, you'll need to install [Subo](https://github.com/suborbital/subo), the Suborbital CLI.
 
 Running this application only takes two commands:
 
 ```
-> subo build . --bundle
+> subo build .
 > subo dev
 ```
 
