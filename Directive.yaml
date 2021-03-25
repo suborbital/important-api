@@ -13,9 +13,7 @@ handlers:
       - fn: ghstars
         onErr:
           code:
-            403: return
-            404: return
-          other: continue
+              404: continue
 
   - type: request
     resource: /repo/report/*repo
@@ -23,8 +21,6 @@ handlers:
     steps:
       - fn: ghstars
         as: stargazers
-        onErr:
-          any: return
 
       - fn: send-report
 
@@ -37,12 +33,9 @@ schedules:
       repo: suborbital/atmo
     steps:
       - fn: ghstars
-        onErr:
-          any: return
+        as: stargazers
 
       - fn: send-report
-        with:
-          - "stargazers: ghstars"
 
 
   - name: reactr-report
@@ -53,7 +46,16 @@ schedules:
     steps:
       - fn: ghstars
         as: stargazers
-        onErr:
-          any: return
+
+      - fn: send-report
+
+  - name: grav-report
+    every:
+      hours: 1
+    state:
+      repo: suborbital/grav
+    steps:
+      - fn: ghstars
+        as: stargazers
 
       - fn: send-report

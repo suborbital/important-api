@@ -20,7 +20,10 @@ impl Runnable for Ghstars {
 
         let method = req::method();
         if method == "SCHED" {
-            repo = req::state("repo").unwrap_or_default();
+            repo = match req::state("repo") {
+                Some(val) =>  val,
+                None => return Err(RunErr::new(403, "no repo provided"))
+            }
         }
 
         if !repo.starts_with("suborbital") {
@@ -33,7 +36,7 @@ impl Runnable for Ghstars {
 
         let repo: Repo = match serde_json::from_slice(repo_details.as_slice()) {
             Ok(r) => r,
-            Err(_) => return Err(RunErr::new(1, ""))
+            Err(_) => return Err(RunErr::new(500, "failed to parse repo details"))
         };
 
         Ok(util::to_vec(format!("{}", repo.stargazers_count)))

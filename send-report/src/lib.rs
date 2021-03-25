@@ -1,9 +1,5 @@
 use suborbital::runnable::*;
-use suborbital::http;
-use suborbital::req;
-use suborbital::util;
-use suborbital::log;
-use suborbital::file;
+use suborbital::{http, req, file, util};
 use std::collections::BTreeMap;
 use serde::{Serialize};
 
@@ -36,9 +32,7 @@ impl Runnable for SendReport {
         headers.insert("Content-Type", "application/json");
 
         let body = serde_json::to_vec(&content).unwrap_or_default();
-        let resp = http::post(url_str.as_str(), Some(body), Some(headers))?;
-
-        log::info(util::to_string(resp).as_str());
+        http::post(url_str.as_str(), Some(body), Some(headers))?;
 
         Ok("ok".as_bytes().to_vec())
     }
