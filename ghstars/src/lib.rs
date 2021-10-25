@@ -15,8 +15,9 @@ struct Repo {
 
 impl Runnable for Ghstars {
     fn run(&self, _: Vec<u8>) -> Result<Vec<u8>, RunErr> {
-        let repo_param = req::url_param("repo");
-        let mut repo = String::from(repo_param.trim_start_matches("/"));
+        // let repo_param = req::url_param("repo");
+        // let mut repo = String::from(repo_param.trim_start_matches("/"));
+        let mut repo: String = String::from("");
 
         let method = req::method();
         if method == "SCHED" {

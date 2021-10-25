@@ -12,7 +12,8 @@ struct WebhookContents {
 
 impl Runnable for SendReport {
     fn run(&self, _: Vec<u8>) -> Result<Vec<u8>, RunErr> {
-        let mut repo = req::url_param("repo");
+        // let mut repo = req::url_param("repo");
+        let mut repo: String = String::from("");
 
         let method = req::method();
         if method == "SCHED" {
