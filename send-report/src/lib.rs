@@ -32,7 +32,10 @@ impl Runnable for SendReport {
         headers.insert("Content-Type", "application/json");
 
         let body = serde_json::to_vec(&content).unwrap_or_default();
-        http::post(url_str.as_str(), Some(body), Some(headers))?;
+        match http::post(url_str.as_str(), Some(body), Some(headers)) {
+            Ok(_) => "",
+            Err(e) => {return Err(RunErr::new(500, e.message.as_str()))}
+        };
 
         Ok("ok".as_bytes().to_vec())
     }

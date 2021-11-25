@@ -32,7 +32,10 @@ impl Runnable for Ghstars {
 
         log::info(format!("fetching stars for {}", repo).as_str());
     
-        let repo_details = http::get(format!("https://api.github.com/repos/{}", repo).as_str(), None)?;
+        let repo_details = match http::get(format!("https://api.github.com/repos/{}", repo).as_str(), None) {
+            Ok(val) => val,
+            Err(e) => { return Err(RunErr::new(500, e.message.as_str())) }
+        };
 
         let repo: Repo = match serde_json::from_slice(repo_details.as_slice()) {
             Ok(r) => r,
