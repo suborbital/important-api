@@ -2,3 +2,5 @@
 *.wasm.zip
 target/
 static/
+.idea
+*.iml

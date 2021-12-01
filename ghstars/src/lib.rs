@@ -1,30 +1,30 @@
-use suborbital::runnable::*;
-use suborbital::req;
+use serde::{Deserialize, Serialize};
+use serde_json;
 use suborbital::http;
 use suborbital::log;
+use suborbital::req;
+use suborbital::runnable::*;
 use suborbital::util;
-use serde::{Serialize, Deserialize};
-use serde_json;
 
 struct Ghstars{}
 
 #[derive(Serialize, Deserialize)]
 struct Repo {
-    stargazers_count: i32,
+    stargazers_count: u32,
 }
 
 impl Runnable for Ghstars {
     fn run(&self, _: Vec<u8>) -> Result<Vec<u8>, RunErr> {
-        let repo_param = req::url_param("repo");
-        let mut repo = String::from(repo_param.trim_start_matches("/"));
-
         let method = req::method();
-        if method == "SCHED" {
-            repo = match req::state("repo") {
+        let repo = if method == "SCHED" {
+             match req::state("repo") {
                 Some(val) =>  val,
                 None => return Err(RunErr::new(403, "no repo provided"))
             }
-        }
+        } else {
+            let repo_param = req::url_param("repo");
+            repo_param.trim_start_matches("/").to_string()
+        };
 
         if !repo.starts_with("suborbital") {
             return Err(RunErr::new(403, "invalid repo org"))
@@ -37,7 +37,7 @@ impl Runnable for Ghstars {
             Err(e) => { return Err(RunErr::new(500, e.message.as_str())) }
         };
 
-        let repo: Repo = match serde_json::from_slice(repo_details.as_slice()) {
+        let repo: Repo = match serde_json::from_slice(&repo_details) {
             Ok(r) => r,
             Err(_) => return Err(RunErr::new(500, "failed to parse repo details"))
         };
